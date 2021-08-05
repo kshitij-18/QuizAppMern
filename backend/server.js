@@ -22,7 +22,8 @@ const url = `mongodb+srv://kshitij:${process.env.MONGO_PASSWORD}@cluster0.tzic9.
 db.connect(url, {
     useCreateIndex: true,
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: true
 }).then(() => {
     console.log("Database Connected")
 }).catch((e) => {

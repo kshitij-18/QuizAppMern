@@ -10,4 +10,10 @@ const quizSchema = new Schema({
 
     course: String,
 
+    questions: [
+        {
+
+        }
+    ]
+
 })

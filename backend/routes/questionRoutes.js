@@ -10,5 +10,9 @@ router.post("/", questionController.createQuestion)
 // Gets all the questions
 router.get("/", questionController.getAllQuestions)
 
+// PUT /api/questions/:id
+// Updates the question
+router.put("/:id", questionController.updateQuestion)
+
 
 module.exports = router
