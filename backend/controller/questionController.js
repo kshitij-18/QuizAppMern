@@ -9,7 +9,8 @@ const questionController = {
         try {
             let data = await Question.create({
                 text: text,
-                choices: choices
+                choices: choices,
+                course: req.body.course
             })
 
             res.status(201).json({

@@ -8,6 +8,16 @@ const questionSchema = new Schema({
         required: true
     },
 
+    course: {
+        type: String,
+        // required: true
+    },
+
+    difficulty: {
+        type: String,
+        // required: true
+    },
+
     choices: [
         {
             text: String,
