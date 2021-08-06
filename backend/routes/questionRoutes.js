@@ -14,5 +14,8 @@ router.get("/", questionController.getAllQuestions)
 // Updates the question
 router.put("/:id", questionController.updateQuestion)
 
+// DELETE /api/questions/:id
+// Deletes the question
+router.delete("/:id", questionController.deleteQuestion)
 
 module.exports = router
