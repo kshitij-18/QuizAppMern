@@ -37,6 +37,27 @@ const quizController = {
                 msg: error.message
             })
         }
+    },
+
+    addQuestion: async (req, res) => {
+        const quiz = await Quiz.findById(req.params.id)
+        // console.log(quiz)
+        const questionsToAdd = await Question.find({ course: quiz.course })
+
+        try {
+            quiz.questions = [...questionsToAdd]
+
+            await quiz.save()
+
+            res.status(200).json({
+                msg: "Questions successfully added"
+            })
+        } catch (error) {
+            res.status(500).json({
+                msg: error.message
+            })
+        }
+
     }
 }
 

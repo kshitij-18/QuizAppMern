@@ -10,4 +10,8 @@ router.get("/", quizController.getQuiz)
 // Creates a new quiz
 router.post("/", quizController.createQuiz)
 
+// PUT /api/quiz/:id
+// Adds all the new questions to the quiz course
+router.put("/:id", quizController.addQuestion)
+
 module.exports = router
