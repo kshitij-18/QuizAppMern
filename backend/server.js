@@ -6,6 +6,7 @@ const cors = require('cors')
 
 const questionRoutes = require('./routes/questionRoutes')
 const quizRoutes = require('./routes/quizRoutes')
+const userRoutes = require('./routes/userRoutes')
 
 
 
@@ -17,6 +18,7 @@ app.use(cors())
 app.use(express.json())
 app.use("/api/questions", questionRoutes)
 app.use("/api/quiz", quizRoutes)
+app.use("/api/users", userRoutes)
 
 
 // Connecting to the Database
