@@ -62,7 +62,34 @@ const userController = {
                 msg: error.message
             })
         }
+    },
+
+    attemptQuiz: async (req, res) => {
+        const quizAttempted = await Quiz.findById(req.params.quizid)
+        const user = await User.findById(req.user.id)
+
+        const quiz = {
+            quizAttempted: quizAttempted,
+            score: req.body.score,
+        }
+
+        user.totalScore += req.body.score
+
+        try {
+            user.quiz.unshift(quiz)
+
+            await user.save()
+
+            res.status(200).json({
+                user
+            })
+        } catch (error) {
+            res.status(500).json({
+                msg: error.message
+            })
+        }
     }
+
 }
 
 module.exports = userController

@@ -29,7 +29,10 @@ const userSchema = new Schema({
                 ref: 'Quiz',
             },
             score: Number,
-            dateAttempted: Date
+            dateAttempted: {
+                type: Date,
+                default: Date.now()
+            }
         }
     ],
     totalScore: {
