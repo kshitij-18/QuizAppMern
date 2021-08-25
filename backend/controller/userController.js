@@ -88,6 +88,49 @@ const userController = {
                 msg: error.message
             })
         }
+    },
+    getAuthUser: async (req, res) => {
+        try {
+            const data = await User.findById(req.user.id).select('-password')
+            res.status(200).json({ data })
+        } catch (error) {
+            res.status(500).json({ msg: error.message })
+        }
+    },
+
+    loginUser: async (req, res) => {
+
+        try {
+            const { username, password } = req.body
+
+            // Check if user already exists
+            const userInDb = await User.findOne({ username: username })
+            // console.log(userInDb)
+
+            if (userInDb) {
+                const verified = await bcrypt.compare(password, userInDb.password)
+                if (!verified) {
+                    console.log("Iam here")
+                    res.status(401).json({ msg: "Please check the password" })
+                }
+            } else {
+                res.status(401).json({ msg: "Sorry no such user exists" })
+            }
+
+            const payload = {
+                user: {
+                    id: userInDb.id
+                }
+            }
+            console.log(userInDb.id)
+            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600000 }, (error, token) => {
+                if (error) throw error
+                res.status(200).json({ token })
+            })
+
+        } catch (error) {
+            return res.status(500).json({ msg: "Server Error" })
+        }
     }
 
 }

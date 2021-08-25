@@ -15,4 +15,14 @@ router.post("/", userController.createUser)
 // Logs the quiz that the user has taken
 router.put("/:quizid", verifyToken, userController.attemptQuiz)
 
+// GET /api/users/auth
+// Gets the authenticated user
+// @access PRIVATE
+router.get("/auth", verifyToken, userController.getAuthUser)
+
+// POST /api/users/login
+// Logs in the user
+// @access PUBLIC
+router.post("/login", userController.loginUser)
+
 module.exports = router
