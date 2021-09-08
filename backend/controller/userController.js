@@ -103,6 +103,7 @@ const userController = {
         try {
             const { username, password } = req.body
 
+
             // Check if user already exists
             const userInDb = await User.findOne({ username: username })
             // console.log(userInDb)

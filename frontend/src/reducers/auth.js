@@ -1,4 +1,5 @@
 import {
+    AUTH_ERROR,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     REGISTER_FAIL,
@@ -28,6 +29,7 @@ export default function (state = initialState, action) {
         case REGISTER_SUCCESS:
         case LOGIN_SUCCESS:
             localStorage.setItem('token', payload.token)
+            console.log(payload)
             return {
                 ...state,
                 ...payload,
@@ -36,6 +38,7 @@ export default function (state = initialState, action) {
             }
         case REGISTER_FAIL:
         case LOGIN_FAIL:
+        case AUTH_ERROR:
             return {
                 ...state,
                 user: null,
