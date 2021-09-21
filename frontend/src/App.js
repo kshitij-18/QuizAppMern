@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { loadUser } from './actions/auth'
 import { Container } from 'react-bootstrap'
 import Login from './Screens/Login';
+import Signup from './Screens/Signup'
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             {/* Login Route */}
             <Route exact path="/login" component={Login}></Route>
             {/* SignUp Route */}
+            <Route exact path="/signup" component={Signup} />
           </Container>
 
         </Switch>
