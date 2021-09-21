@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux'
 import {
     AUTH_ERROR,
     LOGIN_FAIL,
@@ -14,6 +15,7 @@ const initialState = {
     loading: true,
     isAuth: null
 }
+
 
 export default function (state = initialState, action) {
     const { type, payload } = action
@@ -34,7 +36,7 @@ export default function (state = initialState, action) {
                 ...state,
                 ...payload,
                 loading: false,
-                isAuth: true
+                isAuth: true, 
             }
         case REGISTER_FAIL:
         case LOGIN_FAIL:

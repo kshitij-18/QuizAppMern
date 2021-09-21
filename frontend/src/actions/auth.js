@@ -13,6 +13,7 @@ export const loadUser = () => async dispatch => {
 
     try {
         const { data } = await axios.get("/api/users/auth")
+        console.log(data, "This is data")
         dispatch({
             type: USER_LOADED,
             payload: data
@@ -41,6 +42,7 @@ export const login = ({ username, password }) => async dispatch => {
             type: LOGIN_SUCCESS,
             payload: data
         })
+        dispatch(loadUser)
     } catch (error) {
         dispatch({
             type: AUTH_ERROR

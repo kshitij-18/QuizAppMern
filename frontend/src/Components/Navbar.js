@@ -1,7 +1,11 @@
 import { Navbar, Container } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import './Navbar.css'
+import {useDispatch, useSelector} from 'react-redux'
 const NavbarHead = () => {
+    const dispatch = useDispatch()
+    const authState = useSelector(state => state.auth)
+    console.log(authState)
     return (
         <>
             <Navbar bg="dark" variant="dark">
