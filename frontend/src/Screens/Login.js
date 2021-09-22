@@ -11,7 +11,6 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(username, password)
         dispatch(login({ username, password }))
     }
 
@@ -19,7 +18,6 @@ const Login = () => {
     const { isAuth } = authState
 
     if (isAuth) {
-        console.log("Hey I am here")
         return < Redirect to="/" />
     }
 

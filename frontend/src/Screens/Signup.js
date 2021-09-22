@@ -1,14 +1,24 @@
 import React from 'react'
 import { Form, Row, Col, Button } from 'react-bootstrap'
 import useForm from '../hooks/useForm'
+import { Redirect } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { signup } from '../actions/auth'
 
 const SignUp = () => {
     const [values, onChange, onSubmit] = useForm()
+    const dispatch = useDispatch()
 
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log(values)
-        onSubmit()
+        dispatch(signup(values))
+    }
+
+    const authState = useSelector(state => state.auth)
+
+    if(authState.isAuth){
+        return <Redirect to="/" />
     }
 
     return (

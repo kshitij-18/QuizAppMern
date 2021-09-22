@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import setAuthToken from '../utils/setAuthToken'
-import { AUTH_ERROR, LOGIN_SUCCESS, USER_LOADED } from './constants'
+import { AUTH_ERROR, LOGIN_SUCCESS, REGISTER_SUCCESS, USER_LOADED } from './constants'
 
 
 export const loadUser = () => async dispatch => {
@@ -42,11 +42,40 @@ export const login = ({ username, password }) => async dispatch => {
             type: LOGIN_SUCCESS,
             payload: data
         })
-        dispatch(loadUser)
+        console.log("This area is after 1st dispatch")
+        dispatch(loadUser())
     } catch (error) {
         dispatch({
             type: AUTH_ERROR
         })
         console.log(error.message)
     }
+}
+
+export const signup = ({name, username, email, password}) => async dispatch => {
+    const dataFromForm = JSON.stringify({ username, password, name, email })
+    console.log(dataFromForm)
+
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+
+    try {
+        const {data} = await axios.post("/api/users", dataFromForm, config)
+        console.log(data)
+        dispatch({
+            type:REGISTER_SUCCESS, 
+            payload:data
+        })
+        console.log("This is after 1st dispatch")
+        dispatch(loadUser())
+    } catch (error) {
+        dispatch({
+            type: AUTH_ERROR
+        })
+        console.log(error.message)
+    }
+
 }
