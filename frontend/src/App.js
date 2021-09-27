@@ -14,6 +14,7 @@ import { loadUser } from './actions/auth'
 import { Container } from 'react-bootstrap'
 import Login from './Screens/Login';
 import Signup from './Screens/Signup'
+import Homepage from './Screens/Homepage';
 
 
 function App() {
@@ -39,13 +40,14 @@ function App() {
       <Router>
         <Navbar />
         <Switch>
+        <Route exact path="/" component={Homepage} />
           <Container>
             {/* Login Route */}
             <Route exact path="/login" component={Login}></Route>
             {/* SignUp Route */}
             <Route exact path="/signup" component={Signup} />
+            
           </Container>
-
         </Switch>
       </Router>
 

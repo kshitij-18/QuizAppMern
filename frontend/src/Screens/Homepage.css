@@ -1,0 +1,29 @@
+.pricing--container{
+    display:flex;
+    justify-content: space-evenly;
+    align-items: center;
+    /* margin-top: 6rem; */
+    height: 100vh;
+    background: #f8f8ff;
+}
+
+.card{
+    padding:20px;
+    border-radius: 10px;
+    height: 50% !important;
+    transition: transform 250ms;
+}
+
+.card:hover{
+    transform: translateY(-10px);
+}
+
+.card-title{
+    font-size: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+}
+
+.btn{
+    margin-top: 3rem;
+}
