@@ -3,11 +3,17 @@ import { Link } from 'react-router-dom'
 import './Navbar.css'
 import {useDispatch, useSelector} from 'react-redux'
 import {FaUserCircle} from 'react-icons/fa'
+import { logout } from '../actions/auth'
+import { Redirect } from 'react-router'
 
 const NavbarHead = () => {
     const dispatch = useDispatch()
     const authState = useSelector(state => state.auth)
     console.log(authState)
+    
+    const Logout = () => {
+        dispatch(logout())
+    }
 
     const {isAuth, user} = authState
     
@@ -37,7 +43,7 @@ const NavbarHead = () => {
                                     <FaUserCircle/> Profile
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider></NavDropdown.Divider>
-                                <NavDropdown.Item href={`/`}>
+                                <NavDropdown.Item onClick={Logout} href={"/login"}>
                                     Logout
                                 </NavDropdown.Item>
                             </NavDropdown>

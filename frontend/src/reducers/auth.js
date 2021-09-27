@@ -3,6 +3,7 @@ import {
     AUTH_ERROR,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
+    LOGOUT_USER,
     REGISTER_FAIL,
     REGISTER_REQUEST,
     REGISTER_SUCCESS,
@@ -41,6 +42,7 @@ export default function (state = initialState, action) {
         case REGISTER_FAIL:
         case LOGIN_FAIL:
         case AUTH_ERROR:
+        case LOGOUT_USER:
             return {
                 ...state,
                 user: null,

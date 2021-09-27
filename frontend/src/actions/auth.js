@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import setAuthToken from '../utils/setAuthToken'
-import { AUTH_ERROR, LOGIN_SUCCESS, REGISTER_SUCCESS, USER_LOADED } from './constants'
+import { AUTH_ERROR, LOGIN_SUCCESS, LOGOUT_USER, REGISTER_SUCCESS, USER_LOADED } from './constants'
 
 
 export const loadUser = () => async dispatch => {
@@ -78,4 +78,13 @@ export const signup = ({name, username, email, password}) => async dispatch => {
         console.log(error.message)
     }
 
+    
+
+}
+
+export const logout = () => async dispatch => {
+    localStorage.removeItem('token')
+    dispatch({
+        type:LOGOUT_USER
+    })
 }
