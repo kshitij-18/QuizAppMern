@@ -27,3 +27,21 @@
 .btn{
     margin-top: 3rem;
 }
+
+.homepage{
+    width: 100vw;
+    height: 100vh;
+    background: #f8f8ff;
+}
+
+.carousel {
+    height: 100%;
+}
+
+.quiz--holder{
+    display: flex;
+    justify-content: space-evenly;
+    height: 100vh;
+    align-items: flex-start;
+    padding-top: 20px;
+}

@@ -1,6 +1,9 @@
 import React from 'react'
 import {Card, Container , Button} from 'react-bootstrap'
+import {useSelector} from 'react-redux'
+import { Carousel } from 'react-bootstrap'
 import './Homepage.css'
+
 
 const notLoggedin = (
         
@@ -60,13 +63,29 @@ const notLoggedin = (
         </div>
 )
 
-const Homepage = () => {
-    return (<>
-    {/* <Container>
+const loggedIn = (
+    <div className="quiz--holder">
+        <h1>Logged In</h1>
+        <h1>Logged In</h1>
+        <h1>Logged In</h1>
+    </div>
     
-    </Container> */}
-    {notLoggedin}
-    </>
+)
+
+const Homepage = () => {
+    const authState = useSelector(state => state.auth)
+    const {isAuth, user} = authState
+    return (<div className="homepage">
+    
+    {
+        isAuth ? (
+            <Container>
+                {loggedIn}
+            </Container>
+        ) : notLoggedin 
+    }
+    
+    </div>
         
        
     )
