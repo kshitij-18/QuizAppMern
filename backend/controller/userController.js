@@ -112,10 +112,10 @@ const userController = {
                 const verified = await bcrypt.compare(password, userInDb.password)
                 if (!verified) {
                     console.log("Iam here")
-                    res.status(401).json({ msg: "Please check the password" })
+                    return res.status(401).json({ msg: "Please check the password" })
                 }
             } else {
-                res.status(401).json({ msg: "Sorry no such user exists" })
+                return res.status(401).json({ msg: "Sorry no such user exists" })
             }
 
             const payload = {
