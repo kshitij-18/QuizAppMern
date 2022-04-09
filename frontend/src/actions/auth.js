@@ -52,13 +52,18 @@ export const login = ({ username, password }) => async dispatch => {
     }
 }
 
-export const signup = ({name, username, email, password}) => async dispatch => {
-    const dataFromForm = JSON.stringify({ username, password, name, email })
+export const signup = (values) => async dispatch => {
+    const dataFromForm = new FormData()
+    console.log(Object.entries(values))
+    for(const [key, value] of Object.entries(values)){
+        dataFromForm.append(key, value)
+    }
+    
     console.log(dataFromForm)
 
     const config = {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "multipart/form-data",
         }
     }
 
@@ -72,10 +77,12 @@ export const signup = ({name, username, email, password}) => async dispatch => {
         console.log("This is after 1st dispatch")
         dispatch(loadUser())
     } catch (error) {
+        console.log(error)
+        dispatch(setErrors(error.response?.data.msg))
         dispatch({
             type: AUTH_ERROR
         })
-        console.log(error.message)
+        
     }
 
     

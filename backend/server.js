@@ -10,7 +10,6 @@ const userRoutes = require('./routes/userRoutes')
 
 
 
-
 const app = express()
 
 // Using Middleware
@@ -19,6 +18,7 @@ app.use(express.json())
 app.use("/api/questions", questionRoutes)
 app.use("/api/quiz", quizRoutes)
 app.use("/api/users", userRoutes)
+app.use(express.static(`${__dirname}/uploads`))
 
 
 // Connecting to the Database

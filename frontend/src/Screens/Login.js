@@ -45,7 +45,7 @@ const Login = () => {
         <Grid container spacing={2}>
           <Grid item xs={4}></Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={4} sm={3}>
             <Paper className="paper__class" 
             style={{padding:"10px 40px 40px 40px", marginTop:"10%", alignItems:"center", justifyContent:"center", display:"flex", flexDirection:"column"}} elevation={3}>
               {/* <h1 style={{ marginTop: "2rem" }}>Sign In</h1> */}

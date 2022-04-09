@@ -11,16 +11,30 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {logout} from '../actions/auth'
 
 
 
-const pages = ['Login', 'SignUp'];
+const options = ['Login', 'SignUp'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const dispatch = useDispatch()
+  const authState = useSelector(state => state.auth)
+  const {isAuth, user} = authState
+  
+  const location = useLocation()
+  const handleLogout = () => {
+    console.log(location)
+    dispatch(logout())
+    handleCloseUserMenu()
+    console.log(location)
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,82 +51,110 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+  const handleLoginOrRegister = () => {
+
+  }
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Link to={"/"}>
           <Typography
-            variant="h6"
+            style={{textDecoration:"none", color:"white"}}
+            variant="h4"
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            LOGO
+            QUIZUP
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
+          </Link>
+          
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            
+          </Box>
+          {
+            isAuth ? (
+              <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Kshitij" src={`D:\\QuizApp\\QuizAppMern\\backend\\${user.data.profilePic}`} />
+              </IconButton>
+            </Tooltip>
             <Menu
+              sx={{ mt: '45px' }}
               id="menu-appbar"
-              anchorEl={anchorElNav}
+              anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: 'top',
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'left',
+                horizontal: 'right',
               }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
             >
-              {pages.map((page) => (
-                  <Link to={`${page.toLowerCase()}`}  className="menu__link">
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center" style={{textDecoration:"none", backgroundColor:"none"}}>{page}</Typography>
-                    </MenuItem>
-                  </Link>
+              {settings.map((setting) => (
+                setting.toLowerCase() === "logout" ? 
+                (
+                <MenuItem key={setting} onClick={handleLogout} href={"/login"}>
+                  <Typography style={{textDecoration:"none", color:"white"}} textAlign="center">{setting}</Typography>
+                </MenuItem>
                 
-              ))}
+                ):
+                (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+                )
+                )
+              )
+              }
             </Menu>
           </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-                <Link to={`${page.toLowerCase()}`}>
-                    <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+            ) :(
+              <Box sx={{flexGrow:0}}>
+                <Tooltip title="Login or Register">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <AccountCircleIcon fontSize='large'></AccountCircleIcon>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {
+                options.map(option => (
+                <Link to={`/${option.toLowerCase()}`}>
+                  <MenuItem key={option} onClick={handleCloseUserMenu}>
+                  <Typography style={{textDecoration:"none", color:"white"}} textAlign="center">{option}</Typography>
+                </MenuItem>
                 </Link>
+                
+                ))
+              }
+            </Menu>
+              </Box>
               
-            ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
+            )
+          }
+          {/* <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Kshitij" src="/static/images/avatar/2.jpg" />
@@ -135,12 +177,20 @@ const ResponsiveAppBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                setting.toLowerCase() === "logout" ? 
+                (<MenuItem key={setting} onClick={handleLogout}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>):
+                (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
-              ))}
+                )
+                )
+              )
+              }
             </Menu>
-          </Box>
+          </Box> */}
         </Toolbar>
       </Container>
     </AppBar>
