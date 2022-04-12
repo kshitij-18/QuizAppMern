@@ -19,30 +19,39 @@ const userController = {
     },
 
     createUser: async (req, res) => {
-        const { name, username, email, password } = req.body
-
-        // Checking if user already exists
-        const userInDb = await User.findOne({ username })
-        console.log(userInDb)
-        if (userInDb) {
-            return res.status(400).json({
-                msg: "User already exists"
-            })
-        }
-
-        // Create the new user
-        const user = new User({
-            name,
-            email,
-            username,
-            password
-        })
-
-        // Hashing the password
-        const salt = await bcrypt.genSalt(10)
-        user.password = await bcrypt.hash(password, salt)
-
+        console.log(req.body)
+        console.log(req.file)
+        
         try {
+            const { name, username, email, password } = req.body
+            for(const [key, value] of Object.entries(req.body)){
+                if(value === ""){
+                    return res.status(400).json({msg:`${key} cannot be empty`})
+                }
+            }
+    
+            // Checking if user already exists
+            const userInDb = await User.findOne({ username })
+            // // console.log(userInDb)
+            if (userInDb) {
+                return res.status(400).json({
+                    msg: "User already exists"
+                })
+            }
+    
+            // Create the new user
+            const user = new User({
+                name,
+                email,
+                username,
+                password,
+                profilePic : req.file ? req.file.path : "" 
+            })
+    
+            // Hashing the password
+            const salt = await bcrypt.genSalt(10)
+            user.password = await bcrypt.hash(password, salt)
+    
             await user.save()
 
             const payload = {
@@ -58,6 +67,7 @@ const userController = {
                 })
             })
         } catch (error) {
+            console.log("ERRRIIIIIIRRR")
             res.status(500).json({
                 msg: error.message
             })
@@ -112,10 +122,10 @@ const userController = {
                 const verified = await bcrypt.compare(password, userInDb.password)
                 if (!verified) {
                     console.log("Iam here")
-                    res.status(401).json({ msg: "Please check the password" })
+                    return res.status(401).json({ msg: "Please check the password" })
                 }
             } else {
-                res.status(401).json({ msg: "Sorry no such user exists" })
+                return res.status(401).json({ msg: "Sorry no such user exists" })
             }
 
             const payload = {

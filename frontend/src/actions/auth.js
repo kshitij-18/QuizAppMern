@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import setAuthToken from '../utils/setAuthToken'
-import { AUTH_ERROR, LOGIN_SUCCESS, LOGOUT_USER, REGISTER_SUCCESS, USER_LOADED } from './constants'
+import { AUTH_ERROR, LOGIN_SUCCESS, LOGOUT_USER, REGISTER_SUCCESS, USER_LOADED, LOGIN_FAIL } from './constants'
+import {setErrors, removeErrors} from './errors'
 
 
 export const loadUser = () => async dispatch => {
@@ -19,15 +20,13 @@ export const loadUser = () => async dispatch => {
             payload: data
         })
     } catch (error) {
-        dispatch({
-            type: AUTH_ERROR
-        })
+        dispatch(setErrors(error.response?.data.msg))
     }
 }
 
 export const login = ({ username, password }) => async dispatch => {
     const dataFromForm = JSON.stringify({ username, password })
-    console.log(dataFromForm)
+    // console.log(dataFromForm)
 
     const config = {
         headers: {
@@ -37,7 +36,7 @@ export const login = ({ username, password }) => async dispatch => {
 
     try {
         const { data } = await axios.post('http://localhost:5000/api/users/login', dataFromForm, config)
-        console.log(data)
+        console.log(`This is the data after login ${data}`)
         dispatch({
             type: LOGIN_SUCCESS,
             payload: data
@@ -45,20 +44,26 @@ export const login = ({ username, password }) => async dispatch => {
         console.log("This area is after 1st dispatch")
         dispatch(loadUser())
     } catch (error) {
+        console.log(error.response?.data.msg)
+        dispatch(setErrors(error.response?.data.msg))
         dispatch({
-            type: AUTH_ERROR
+            type:LOGIN_FAIL
         })
-        console.log(error.message)
     }
 }
 
-export const signup = ({name, username, email, password}) => async dispatch => {
-    const dataFromForm = JSON.stringify({ username, password, name, email })
+export const signup = (values) => async dispatch => {
+    const dataFromForm = new FormData()
+    console.log(Object.entries(values))
+    for(const [key, value] of Object.entries(values)){
+        dataFromForm.append(key, value)
+    }
+    
     console.log(dataFromForm)
 
     const config = {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "multipart/form-data",
         }
     }
 
@@ -72,10 +77,12 @@ export const signup = ({name, username, email, password}) => async dispatch => {
         console.log("This is after 1st dispatch")
         dispatch(loadUser())
     } catch (error) {
+        console.log(error)
+        dispatch(setErrors(error.response?.data.msg))
         dispatch({
             type: AUTH_ERROR
         })
-        console.log(error.message)
+        
     }
 
     

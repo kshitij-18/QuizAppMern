@@ -4,7 +4,12 @@ const useForm = () => {
     const [state, setState] = useState({})
 
     const handleChange = e => {
-        setState({...state, [e.target.name]: e.target.value})
+        if(e.target.name !== "profilePicture"){
+            setState({...state, [e.target.name]: e.target.value })
+        } else {
+            setState({...state, [e.target.name]: e.target.files[0]})
+        }
+        console.log(state)
     }
 
     const onSubmit = () => {

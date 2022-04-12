@@ -47,7 +47,8 @@ export default function (state = initialState, action) {
                 ...state,
                 user: null,
                 loading: false,
-                isAuth: false
+                isAuth: false,
+                token:localStorage.removeItem('token')
             }
         default:
             return state
