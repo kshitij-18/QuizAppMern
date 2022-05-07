@@ -55,7 +55,7 @@ const ResponsiveAppBar = () => {
 
   }
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" style={{maxWidth:"100%"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to={"/"}>
@@ -79,7 +79,8 @@ const ResponsiveAppBar = () => {
               <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Kshitij" src={`D:\\QuizApp\\QuizAppMern\\backend\\${user.data.profilePic}`} />
+                {/* <Avatar alt="Kshitij" src={`D:\\QuizApp\\QuizAppMern\\backend\\${user?.data?.profilePic}`} /> */}
+                <Avatar alt={user?.data?.name} src={user?.data?.profilePic} />
               </IconButton>
             </Tooltip>
             <Menu

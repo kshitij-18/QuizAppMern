@@ -7,14 +7,12 @@ import {setErrors, removeErrors} from './errors'
 
 export const loadUser = () => async dispatch => {
     const tokenFromStorage = localStorage.getItem('token')
-    console.log(tokenFromStorage)
     if (tokenFromStorage) {
         setAuthToken(tokenFromStorage)
     }
 
     try {
         const { data } = await axios.get("/api/users/auth")
-        console.log(data, "This is data")
         dispatch({
             type: USER_LOADED,
             payload: data

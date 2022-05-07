@@ -2,6 +2,9 @@ const Quiz = require('../database/quizModel')
 const User = require('../database/userModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const {Storage} = require('@google-cloud/storage')
+const path = require("path")
+const fs = require("fs")
 
 const userController = {
     getUsers: async (req, res) => {
@@ -18,7 +21,8 @@ const userController = {
         }
     },
 
-    createUser: async (req, res) => {
+   
+    createUser: async function (req, res) {
         console.log(req.body)
         console.log(req.file)
         
@@ -29,7 +33,20 @@ const userController = {
                     return res.status(400).json({msg:`${key} cannot be empty`})
                 }
             }
-    
+
+            
+            // GoogleCloud.getBuckets().then( x => console.log(x))
+            if (req.file){
+                try{
+                    await uploadFile("kshitij-quiz-bucket-1", req.file.filename, 
+                    req.file.path, 
+                    () => fs.unlinkSync(req.file.path))
+                    
+                } catch(error){
+                    console.log(error)
+                }
+                
+            }
             // Checking if user already exists
             const userInDb = await User.findOne({ username })
             // // console.log(userInDb)
@@ -45,7 +62,7 @@ const userController = {
                 email,
                 username,
                 password,
-                profilePic : req.file ? req.file.path : "" 
+                profilePic : req.file ? process.env.GCP_STORAGE+req.file.filename : ""
             })
     
             // Hashing the password
@@ -145,5 +162,22 @@ const userController = {
     }
 
 }
+
+const uploadFile = async (bucketName, fileName, filePath, clearUploadFunction) => {
+    const GoogleCloud = new Storage({
+        keyFilename: path.join(__dirname, "../quizapp-345312-4adb7bcf43f0.json"),
+        projectId:"quizapp-345312"
+    }) 
+    
+    await GoogleCloud.bucket(bucketName).upload(filePath, {
+        destination:fileName
+    })
+
+    console.log(`${fileName} uploaded to ${bucketName}`)
+    clearUploadFunction()
+}
+
+
+uploadFile.bind(userController)
 
 module.exports = userController
