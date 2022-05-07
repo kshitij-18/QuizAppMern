@@ -55,7 +55,7 @@ const ResponsiveAppBar = () => {
 
   }
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" style={{maxWidth:"100%"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to={"/"}>

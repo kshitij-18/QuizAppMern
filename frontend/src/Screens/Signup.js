@@ -139,7 +139,7 @@ const SignUp = () => {
                     </Form.Group>
                     </Row>
                   <Button variant="contained" onClick={handleSubmit}>
-                    Login
+                    SignUP
                   </Button>
                 </Form>
               </Paper>

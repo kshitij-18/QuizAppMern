@@ -4,7 +4,7 @@ const Quiz = require('../database/quizModel')
 const quizController = {
     getQuiz: async (req, res) => {
         try {
-            const data = await Quiz.find()
+            const data = await Quiz.find().populate("questions")
             res.status(200).json({
                 data
             })
