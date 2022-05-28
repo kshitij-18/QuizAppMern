@@ -14,7 +14,7 @@ function Homepage() {
   return (
     <div style={{height:"100vh"}}>   
         <Box mt={2} sx={{display:'flex', flexWrap:"wrap", justifyContent:"space-evenly"}}>
-          <div style={{backgroundColor:"red", height:"200px", width:"300px", flex:1}}></div>
+          <div style={{height:"200px", width:"300px", flex:1}}></div>
           <div style={{width:"300px", flex:3.5, display:'flex', flexWrap:"wrap"}}>
             <Card sx={{minWidth:275, margin:"10px"}}>
               <CardContent>
@@ -77,7 +77,7 @@ function Homepage() {
 
 
           </div>
-          <div style={{backgroundColor:"green", height:"200px", width:"300px", flex:1}}></div>
+          <div style={{height:"200px", width:"300px", flex:1}}></div>
         </Box>
         
     </div>

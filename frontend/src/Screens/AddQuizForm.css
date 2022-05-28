@@ -1,0 +1,23 @@
+.addquiz_form{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* width: 100vw; */
+    height: 100vh;
+    /* background-color: blue; */
+    padding-top: 5%;
+}
+
+#quiz_details{
+    display: flex;
+    margin-top: 1.5rem;
+}
+
+#quiz_title{
+    flex:2.5 1 0;
+    margin-right:15rem
+}
+
+#quiz_course {
+    flex: 1 1 0
+}
