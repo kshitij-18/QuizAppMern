@@ -26,7 +26,8 @@ const questionSchema = new Schema({
                 default: false
             }
         }
-    ]
+    ],
+    slug:{type:String, required:true}
 })
 
 const Question = mongoose.model("Question", questionSchema)

@@ -3,14 +3,14 @@ const Question = require('../database/questionModel')
 
 const questionController = {
     createQuestion: async (req, res) => {
-        const text = req.body.text
-        const choices = req.body.choices
+        const {text, choices, slug} = req.body;
 
         try {
             let data = await Question.create({
                 text: text,
                 choices: choices,
-                course: req.body.course
+                course: req.body.course,
+                slug:[slug]
             })
 
             res.status(201).json({

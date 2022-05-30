@@ -18,15 +18,21 @@ const quizController = {
     createQuiz: async (req, res) => {
         const name = req.body.name
         const course = req.body.course && req.body.course
-        const questions = await Question.find({ course: course })
-
+        const questionsFromFrontend = req.body.questions
+        const questionsToStore = questionsFromFrontend.map(question => ({...question, slug:`${name}${course}`}))
         // console.log(questions)
 
         try {
+            await Question.insertMany(questionsToStore)
+            const questionArray = await Question.aggregate([
+                {
+                    $match:{"slug":{$in:[`${name}${course}`]}}
+                }
+            ])
             let data = await Quiz.create({
                 name: name,
                 course: course,
-                questions: questions
+                questions: questionArray
             })
 
             res.status(201).json({
@@ -40,12 +46,14 @@ const quizController = {
     },
 
     addQuestion: async (req, res) => {
-        const quiz = await Quiz.findById(req.params.id)
-        // console.log(quiz)
-        const questionsToAdd = await Question.find({ course: quiz.course })
-
+        
         try {
-            quiz.questions = [...questionsToAdd]
+            const quiz = await Quiz.findById(req.params.id)
+            const {questions} = req.body 
+            const {name, course} = quiz
+            const questionsToStore = questions.map(question => ({...question, slug:`${name}${course}`}))
+            const storedQuestions = await Question.insertMany(questionsToStore)
+            quiz.questions = [...quiz.questions, ...storedQuestions]
 
             await quiz.save()
 

@@ -8,7 +8,10 @@ const quizSchema = new Schema({
         required: true
     },
 
-    course: String,
+    course:{
+        type:String,
+        required:true
+    },
 
     questions: [
         {

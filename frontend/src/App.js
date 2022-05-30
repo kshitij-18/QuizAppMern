@@ -18,6 +18,8 @@ import Login from './Screens/Login';
 import Signup from './Screens/Signup'
 import Homepage from './Screens/Homepage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AddQuizForm from './Screens/AddQuizForm'
+import ProtectedRoutes from './utils/ProtectedRoutes'
 
 function App() {
   // const theme = React.useMemo(() => createTheme({
@@ -27,7 +29,7 @@ function App() {
   // }), [])
   const dispatch = useDispatch()
   const authState = useSelector(state => state.auth)
-  
+  const {isAuth} = authState
   // useEffect(() => {
   //   dispatch(loadUser())
   // }, [])
@@ -53,7 +55,9 @@ function App() {
             <Route exact path="/login" component={Login}></Route>
             {/* SignUp Route */}
             <Route exact path="/signup" component={Signup} />
-            
+            <ProtectedRoutes isLoggedIn={isAuth}>
+              <Route exact path="/admin/addQuiz" component={AddQuizForm} />
+            </ProtectedRoutes>
           </Container>
         </Switch>
       </Router>
