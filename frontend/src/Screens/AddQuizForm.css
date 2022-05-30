@@ -15,9 +15,26 @@
 
 #quiz_title{
     flex:2.5 1 0;
-    margin-right:15rem
+    margin-right:10rem
 }
 
 #quiz_course {
     flex: 1 1 0
 }
+
+.choice_detail{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding:5px
+}
+
+.choice_detail > *{
+    margin: 5px;
+}
+
+.choice_text{
+    flex: 1.5 1 0
+}
+
+
