@@ -37,4 +37,9 @@
     flex: 1.5 1 0
 }
 
+.add__question__row{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 
