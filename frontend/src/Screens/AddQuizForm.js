@@ -1,4 +1,4 @@
-// TODO - Add Validation for input fields while submitting the form 
+// TODO - Complete sending the data to the server in handleSubmit function 
 
 import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
@@ -23,6 +23,35 @@ import {v4 as uuidv4} from 'uuid'
 import './AddQuizForm.css'
 import { AVAILABLE_QUIZ_COURSES } from '../utils/constants';
 
+function getNewChoice(isCorrect=false){
+  this.isCorrect = isCorrect;
+  const newChoice = {
+      choice_id: uuidv4(),
+      text: "",
+      choiceError: {
+        msg: "",
+        status: false,
+      },
+      isCorrect: this.isCorrect,
+    }
+  return newChoice;
+}
+
+function getNewQuestion(){
+const newQuestion = {
+  id: uuidv4(),
+  text: "",
+  questionError: {
+    msg: "",
+    status: false,
+  },
+  choices: [new getNewChoice(true), new getNewChoice(false)]
+};
+return newQuestion;
+}
+
+
+
 const AddQuizForm = () => {
   const dispatch = useDispatch()
   const {user} = useSelector(state => state.auth)
@@ -39,19 +68,18 @@ const AddQuizForm = () => {
   // This is where our states go
   const [quizTitle, setQuizTitle] = useState('')
   const [quizCourse, setQuizCourse] = useState('')
-  const [questions, setQuestions] = useState([
-    {
-      id:uuidv4(),
-      text:'',
-      choices:[
-        { choice_id:uuidv4(),
-          text:'',
-          isCorrect:true
-        }
-      ]
+  const questionToStartWith = new getNewQuestion();
+  const [questions, setQuestions] = useState([questionToStartWith]);
+  const [quizError, setQuizError] = useState({
+    title:{
+      msg:"",
+      state:false
+    },
+    course:{
+      msg:"",
+      state:false
     }
-  ])
-  const [choicesError, setChoicesError] = useState(false)
+  })
 
   // This function handles the change in Quiz of the title
   const handleQuestionTextChange = (e, question) => {
@@ -64,11 +92,7 @@ const AddQuizForm = () => {
 
   // Function to add a new choice to a question
   const addChoice = (e, question) => {
-    const newChoice = {
-      choice_id:uuidv4(),
-      text:'',
-      isCorrect:false
-    }
+    const newChoice = new getNewChoice();
 
     const questionsWithUpdatedChoices = questions.map(ques => {
       if (ques.id === question.id) question.choices.push(newChoice);
@@ -114,16 +138,7 @@ const AddQuizForm = () => {
   }
 
   const addQuestions = () => {
-    const newQuestion = {
-      id:uuidv4(),
-      text:'',
-      choices:[
-        { choice_id:uuidv4(),
-          text:'',
-          isCorrect:true
-        }
-      ]
-    }
+    const newQuestion = new getNewQuestion();
     setQuestions([...questions, newQuestion])
   }
 
@@ -131,40 +146,83 @@ const AddQuizForm = () => {
     setQuestions(questions.filter(ques => ques.id !== question_id))
   }
 
-  const handleSubmit = () => {
-    const data = {
-      name:quizTitle,
-      course:quizCourse,
-    };
-    const finalQuestions = questions;
-    /*
-    for each question we need to remove the id of each question and choice_id of its choices 
-    and add course key to each question
-    */ 
-   finalQuestions.map(ques => {
-     delete ques.id;
-     ques.course = quizCourse;
-     ques.choices.map(ch => {
-       delete ch.choice_id;
-     })
-   })
-   data.questions = finalQuestions;
-   console.log(data)
+  const verifyInput = () => {
+    let hasIssues = false;
+    // console.log(quizTitle === '')
+    const errorObj = {
+      title:{
+        msg:'',
+        state:false
+      },
+      course:{
+        msg:'',
+        state:false
+      }
+    }
+    if (quizTitle === ''){
+      errorObj.title.msg = 'The Quiz Title cannot be empty'
+      errorObj.title.state = true;
+      hasIssues=true;
+    }
+    if (quizCourse === '') {
+      errorObj.course.msg = 'The Quiz Course cannot be empty'
+      errorObj.course.state = true
+      hasIssues = true;
+    }
+    setQuizError(errorObj);
+    questions.forEach(ques => {
+      if (ques.text === ''){
+        ques.questionError.msg = 'Question Text cannot be empty';
+        ques.questionError.status = true;
+        hasIssues = true;
+      }
+      ques.choices.forEach(choice => {
+        if (choice.text === ''){
+          choice.choiceError.msg = 'The Choice text cannot be empty.'
+          choice.choiceError.status = true;
+          hasIssues=true;
+        }
+      })
+    })
+    setQuestions(questions);
+    return hasIssues;
   }
 
+  const handleSubmit = () => {
+    const doesFormHaveIssues = verifyInput();
+    if (!doesFormHaveIssues){
+      console.log('Submitting your quiz...')
+      const data = {
+        name: quizTitle,
+        course: quizCourse,
+      };
+      const finalQuestions = questions;
+      /*
+        * Important - for each question and choice remove id and error object.
+        * and add course key for questions.
+    */
+      finalQuestions.forEach((ques) => {
+        delete ques.id;
+        delete ques.questionError;
+        ques.course = quizCourse;
+        ques.choices.forEach((ch) => {
+          delete ch.choice_id;
+          delete ch.choiceError
+        });
+      });
+      data.questions = finalQuestions;
+      
+    } else {
+      dispatch(setErrors("Your form has issues please check before submitting"))
+    }
+    
+  }
   return (
     <div className="addquiz_form">
       {errors.map((err) => (
         <>
-          <Snackbar
-            open={err !== null}
-            key={err.id}
-            color="danger"
-          >
-            <Alert
-              severity={err.severity}
-              sx={{ width: "100%" }}
-            >
+          <Snackbar open={err !== null} key={err.id} color="danger">
+            <Alert severity={err.severity} sx={{ width: "100%" }}>
               {err.error}
             </Alert>
           </Snackbar>
@@ -185,6 +243,13 @@ const AddQuizForm = () => {
                 fullWidth
                 value={quizTitle}
                 onChange={(e) => setQuizTitle(e.target.value)}
+                required={true}
+                error={quizError.title.state && quizTitle === ""}
+                helperText={
+                  quizError.title.state && quizTitle === ""
+                    ? quizError.title.msg
+                    : "What will your quiz be called?"
+                }
               />
             </div>
             <div id="quiz_course" style={{ marginBottom: "2%" }}>
@@ -194,6 +259,13 @@ const AddQuizForm = () => {
                 onChange={(e) => setQuizCourse(e.target.value)}
                 select
                 fullWidth
+                required={true}
+                error={quizError.course.state && quizCourse === ""}
+                helperText={
+                  quizError.course.state && quizCourse === ""
+                    ? quizError.course.msg
+                    : "What is the course your quiz comes under?"
+                }
               >
                 {AVAILABLE_QUIZ_COURSES.map((course, idx) => {
                   return (
@@ -218,6 +290,10 @@ const AddQuizForm = () => {
                 value={question.text}
                 onChange={(e) => handleQuestionTextChange(e, question)}
                 style={{ marginBottom: "2%" }}
+                error={question.questionError?.status && question.text === ''}
+                helperText={
+                  question.questionError?.status && question.text === '' && question.questionError?.msg
+                }
               />
               <Typography fontSize={20} fontFamily={"'Koulen', cursive;"}>
                 {`Choices`}
@@ -243,6 +319,10 @@ const AddQuizForm = () => {
                         onChange={(e) =>
                           handleChangeInChoices(e, question, choice)
                         }
+                        error={choice.choiceError?.status && choice.text === ''}
+                        helperText={choice.choiceError?.status && 
+                          choice.text === '' 
+                          && choice.choiceError?.msg }
                       />
                     </div>
                     <div className="choice_isCorrect">
@@ -272,7 +352,7 @@ const AddQuizForm = () => {
                     </div>
                     <div className="choice_options">
                       <IconButton onClick={(e) => addChoice(e, question)}>
-                        <AddIcon></AddIcon>
+                        <AddIcon />
                       </IconButton>
                       <IconButton
                         onClick={(e) =>
@@ -284,7 +364,7 @@ const AddQuizForm = () => {
                           )
                         }
                       >
-                        {choices_arr.length > 1 && <DeleteIcon></DeleteIcon>}
+                        {choices_arr.length > 2 && <DeleteIcon></DeleteIcon>}
                       </IconButton>
                     </div>
                   </div>
