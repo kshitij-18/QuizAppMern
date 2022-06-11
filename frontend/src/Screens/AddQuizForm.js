@@ -1,3 +1,5 @@
+// TODO - Add Validation for input fields while submitting the form 
+
 import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 import {Card, 
@@ -9,7 +11,9 @@ import {Card,
   Switch, 
   FormGroup, 
   FormControlLabel,
-  IconButton} from '@mui/material'
+  IconButton,
+  Snackbar,
+  Alert} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,10 +21,12 @@ import { Redirect } from 'react-router-dom'
 import { setErrors } from '../actions/errors'
 import {v4 as uuidv4} from 'uuid'
 import './AddQuizForm.css'
+import { AVAILABLE_QUIZ_COURSES } from '../utils/constants';
 
 const AddQuizForm = () => {
   const dispatch = useDispatch()
   const {user} = useSelector(state => state.auth)
+  const {errors} = useSelector(state => state.error)
   useEffect(() => {
     console.log(user && user.data && !user.data.isAdmin)
     if(user && user.data && !user.data.isAdmin){
@@ -83,10 +89,23 @@ const AddQuizForm = () => {
         return ch
       })
     } else if(type === 'switch'){
-      questionToChange.choices.map(ch => {
-        if (ch.choice_id === choice.choice_id) choice.isCorrect = e.target.checked;
-        return ch
-      })
+      /*
+      This is done because if we are selecting one option to be
+      correct we should automatically clear other option which are selected to be correct first
+      */
+      if (e.target.checked) {
+        questionToChange.choices.map((ch) => {
+          if (ch.isCorrect && choice.choice_id !== ch.choice_id) {
+            ch.isCorrect = false;
+          }
+          if (ch.choice_id === choice.choice_id)
+            choice.isCorrect = e.target.checked;
+          return ch;
+        });
+      }
+      else {
+        dispatch(setErrors("A question must have at least one correct option"));
+      }
     } else if(type === 'delete_choice'){
       const index = question.choices.indexOf(choice)
       if(index > -1) question.choices.splice(index,1)
@@ -94,9 +113,63 @@ const AddQuizForm = () => {
     setQuestions([...questionMapping.values()])
   }
 
+  const addQuestions = () => {
+    const newQuestion = {
+      id:uuidv4(),
+      text:'',
+      choices:[
+        { choice_id:uuidv4(),
+          text:'',
+          isCorrect:true
+        }
+      ]
+    }
+    setQuestions([...questions, newQuestion])
+  }
+
+  const deleteQuestion = (question_id) => {
+    setQuestions(questions.filter(ques => ques.id !== question_id))
+  }
+
+  const handleSubmit = () => {
+    const data = {
+      name:quizTitle,
+      course:quizCourse,
+    };
+    const finalQuestions = questions;
+    /*
+    for each question we need to remove the id of each question and choice_id of its choices 
+    and add course key to each question
+    */ 
+   finalQuestions.map(ques => {
+     delete ques.id;
+     ques.course = quizCourse;
+     ques.choices.map(ch => {
+       delete ch.choice_id;
+     })
+   })
+   data.questions = finalQuestions;
+   console.log(data)
+  }
 
   return (
     <div className="addquiz_form">
+      {errors.map((err) => (
+        <>
+          <Snackbar
+            open={err !== null}
+            key={err.id}
+            color="danger"
+          >
+            <Alert
+              severity={err.severity}
+              sx={{ width: "100%" }}
+            >
+              {err.error}
+            </Alert>
+          </Snackbar>
+        </>
+      ))}
       <Card
         sx={{ width: "100%", minHeight: 400, borderRadius: 4, padding: "15px" }}
       >
@@ -122,19 +195,17 @@ const AddQuizForm = () => {
                 select
                 fullWidth
               >
-                {["Basic G.K.", "Advanced G.K.", "Basic Current Affairs"].map(
-                  (course, idx) => {
-                    return (
-                      <MenuItem key={idx} value={course}>
-                        {course}
-                      </MenuItem>
-                    );
-                  }
-                )}
+                {AVAILABLE_QUIZ_COURSES.map((course, idx) => {
+                  return (
+                    <MenuItem key={idx} value={course}>
+                      {course}
+                    </MenuItem>
+                  );
+                })}
               </TextField>
             </div>
           </div>
-          {questions.map((question, idx) => (
+          {questions.map((question, idx, questions_arr) => (
             <div key={question.id} className="question">
               <hr />
               <Typography fontSize={30} fontFamily={"'Koulen', cursive;"}>
@@ -203,16 +274,45 @@ const AddQuizForm = () => {
                       <IconButton onClick={(e) => addChoice(e, question)}>
                         <AddIcon></AddIcon>
                       </IconButton>
-                      <IconButton onClick={(e) => handleChangeInChoices(e, question, choice, 'delete_choice')}>
+                      <IconButton
+                        onClick={(e) =>
+                          handleChangeInChoices(
+                            e,
+                            question,
+                            choice,
+                            "delete_choice"
+                          )
+                        }
+                      >
                         {choices_arr.length > 1 && <DeleteIcon></DeleteIcon>}
                       </IconButton>
                     </div>
                   </div>
                 </div>
               ))}
+              <div className="add__question__row">
+                {questions_arr.length > 1 && (
+                  <Button
+                    variant="outlined"
+                    color="danger"
+                    onClick={() => deleteQuestion(question.id)}
+                    style={{ marginRight: "10px", marginTop: "20px" }}
+                  >
+                    Delete Question
+                  </Button>
+                )}
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={addQuestions}
+                  style={{ marginRight: "10px", marginTop: "20px" }}
+                >
+                  Add Question
+                </Button>
+              </div>
             </div>
           ))}
-          <Button onClick={() => console.log(questions)}>Click Me</Button>
+          <Button onClick={() => handleSubmit()}>Click Me</Button>
         </CardContent>
       </Card>
     </div>

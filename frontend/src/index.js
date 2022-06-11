@@ -7,10 +7,17 @@ import { Provider } from 'react-redux'
 import store from './store';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { lightBlue, lightGreen, red } from "@mui/material/colors";
 
 const theme = createTheme({
   palette:{
-    mode:"dark"
+    mode:"dark",
+    success:{
+      main:lightGreen.A400
+    },
+    danger:{
+      main:red[900]
+    }
   }
 })
 
