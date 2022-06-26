@@ -2,10 +2,13 @@ import { Typography, Box, Paper, CardContent, Card, CardActions, Button } from '
 import React, {useEffect} from 'react'
 import {fetchAllQuizes} from '../actions/quizzes'
 import {useDispatch, useSelector} from 'react-redux'
+import {useLocation} from 'react-router-dom'
 
 function Homepage() {
   const dispatch = useDispatch()
   const {quizzes} = useSelector(state => state.quizzes)
+  let location = useLocation();
+  console.log(`LOCATION: `,location)
 
   useEffect(() => {
     dispatch(fetchAllQuizes())

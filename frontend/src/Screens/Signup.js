@@ -11,13 +11,15 @@ import {
 
 } from "@mui/material"
 import ShowAlert from "../Components/ShowAlert";
-import { Redirect } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { signup } from '../actions/auth'
 import { styled } from '@mui/material/styles';
 import { Paper } from '@mui/material'
 
 const SignUp = () => {
+  const navigate = useNavigate();
+    
     const [values, onChange, onSubmit] = useForm()
     const dispatch = useDispatch()
 
@@ -30,7 +32,13 @@ const SignUp = () => {
     const authState = useSelector(state => state.auth)
 
     if(authState.isAuth){
-        return <Redirect to="/" />
+        navigate("/", {
+          replace: true,
+          state: {
+            message: "You are already signed in",
+            severity: "info",
+          },
+        }); 
     }
 
     const Input = styled('input')({

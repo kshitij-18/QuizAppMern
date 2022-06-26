@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { login } from "../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ShowAlert from "../Components/ShowAlert";
 import { Box } from "@mui/system";
@@ -12,6 +12,7 @@ import { TextField, Typography } from "@mui/material";
 import './Login.css'
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState({userNameError:false, passwordError:false})
@@ -36,7 +37,10 @@ const Login = () => {
   const { isAuth } = authState;
 
   if (isAuth) {
-    return <Redirect to="/" />;
+    navigate("/",{replace:true, state:{
+      message:"You are already logged in",
+      severity:"info"
+    }})
   }
 
   return (

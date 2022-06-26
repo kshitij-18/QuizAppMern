@@ -1,6 +1,4 @@
 // TODO - Complete sending the data to the server in handleSubmit function 
-
-import { Box } from '@mui/system'
 import React, { useEffect, useState } from 'react'
 import {Card, 
   CardContent, 
@@ -17,11 +15,13 @@ import {Card,
 import { useDispatch, useSelector } from 'react-redux'
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Redirect } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { setErrors } from '../actions/errors'
 import {v4 as uuidv4} from 'uuid'
 import './AddQuizForm.css'
 import { AVAILABLE_QUIZ_COURSES } from '../utils/constants';
+import { createQuiz } from '../actions/quiz';
+import { Nav } from 'react-bootstrap';
 
 function getNewChoice(isCorrect=false){
   this.isCorrect = isCorrect;
@@ -52,19 +52,17 @@ return newQuestion;
 
 
 
-const AddQuizForm = () => {
+const AddQuizForm = ({isAuth, user}) => {
+  console.log('::::::::::::::RENDERED::::::::::::::::')
+  const navigate = useNavigate();
   const dispatch = useDispatch()
-  const {user} = useSelector(state => state.auth)
+  // const {user, isAuth} = useSelector(state => state.auth);
+  console.log(`User is: ${user} isAuth is: ${isAuth}`);
   const {errors} = useSelector(state => state.error)
-  useEffect(() => {
-    console.log(user && user.data && !user.data.isAdmin)
-    if(user && user.data && !user.data.isAdmin){
-      <Redirect to="/" />
-      dispatch(setErrors("You are not the Admin you are not allowed back there"))
-    }
-    
-  }, [])
+  const {quiz , loading, error, errorMsg} = useSelector(state => state.quiz);
+  
 
+  
   // This is where our states go
   const [quizTitle, setQuizTitle] = useState('')
   const [quizCourse, setQuizCourse] = useState('')
@@ -80,7 +78,16 @@ const AddQuizForm = () => {
       state:false
     }
   })
-
+  
+  if (quiz.data && !loading) {
+    navigate("/", {
+      replace: true,
+      state: {
+        message: "Quiz created successfully",
+        severity: "success",
+      },
+    });
+  }
   // This function handles the change in Quiz of the title
   const handleQuestionTextChange = (e, question) => {
     const newQuestions = questions.map(ques => {
@@ -148,7 +155,6 @@ const AddQuizForm = () => {
 
   const verifyInput = () => {
     let hasIssues = false;
-    // console.log(quizTitle === '')
     const errorObj = {
       title:{
         msg:'',
@@ -211,7 +217,7 @@ const AddQuizForm = () => {
         });
       });
       data.questions = finalQuestions;
-      
+      dispatch(createQuiz(data));
     } else {
       dispatch(setErrors("Your form has issues please check before submitting"))
     }

@@ -8,6 +8,7 @@ import store from './store';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { lightBlue, lightGreen, red } from "@mui/material/colors";
+import { Router } from 'react-router-dom';
 
 const theme = createTheme({
   palette:{
@@ -24,13 +25,13 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-    <Provider store={store}>
-      <CssBaseline />
-      <App />
-    </Provider>
+      <Provider store={store}>
+        <CssBaseline />
+          <App />
+      </Provider>
     </ThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
