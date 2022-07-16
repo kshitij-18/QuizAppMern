@@ -1,14 +1,13 @@
 import React from 'react'
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoutes = ({isLoggedIn, children}) => {
+const AdminRoutes = ({isLoggedIn, isAdmin, children}) => {
     // let navigate = useNavigate()
-    if(isLoggedIn){
+    if(isLoggedIn && isAdmin){
         return children
     } else {
-       <Redirect to={"/"} />
-       return null
+       return <Navigate to={"/"} replace />
     }
 }
 
-export default ProtectedRoutes
+export default AdminRoutes
