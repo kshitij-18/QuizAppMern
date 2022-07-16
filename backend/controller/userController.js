@@ -138,7 +138,6 @@ const userController = {
             if (userInDb) {
                 const verified = await bcrypt.compare(password, userInDb.password)
                 if (!verified) {
-                    console.log("Iam here")
                     return res.status(401).json({ msg: "Please check the password" })
                 }
             } else {

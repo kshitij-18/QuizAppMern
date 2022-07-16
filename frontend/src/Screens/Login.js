@@ -29,6 +29,13 @@ const Login = () => {
     } 
     else {
       dispatch(login({ username, password }));
+      navigate("/", {
+        replace:true,
+        state:{
+          message:"Logged In",
+          severity:"success"
+        }
+      })
       return
     }
   };
