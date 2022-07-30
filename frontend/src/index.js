@@ -9,6 +9,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { lightBlue, lightGreen, red } from "@mui/material/colors";
 import { Router } from 'react-router-dom';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
+
+const client = new QueryClient();
 
 const theme = createTheme({
   palette:{
@@ -24,12 +28,15 @@ const theme = createTheme({
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <CssBaseline />
+    <QueryClientProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <CssBaseline />
           <App />
-      </Provider>
-    </ThemeProvider>
+        </Provider>
+      </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} position='bottom-left' />
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

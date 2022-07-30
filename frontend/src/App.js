@@ -16,6 +16,7 @@ import AddQuizForm from './Screens/AddQuizForm'
 import AdminRoutes from './utils/ProtectedRoutes'
 import {BrowserRouter as Router,Routes, Route, useLocation} from 'react-router-dom'
 
+
 function App(props) {
   const dispatch = useDispatch()
   const authState = useSelector(state => state.auth)
@@ -31,27 +32,33 @@ function App(props) {
 
   return (
     <div className="App">
-      <Router>
-        <Navbar />
-        <Container>
-          <Routes>
-            <Route path="/" element={<Homepage />} />
+      {/* <QueryClientProvider client={client}> */}
+        <Router>
+          <Navbar />
+          <Container>
+            <Routes>
+              <Route path="/" element={<Homepage />} />
 
-            {/* Login Route */}
-            <Route path="/login" element={<Login />}></Route>
-            {/* SignUp Route */}
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/admin/addQuiz"
-              element={
-                <AdminRoutes isLoggedIn={isAuth} isAdmin={user?.data?.isAdmin}>
-                  <AddQuizForm />
-                </AdminRoutes>
-              }
-            />
-          </Routes>
-        </Container>
-      </Router>
+              {/* Login Route */}
+              <Route path="/login" element={<Login />}></Route>
+              {/* SignUp Route */}
+              <Route path="/signup" element={<Signup />} />
+              <Route
+                path="/admin/addQuiz"
+                element={
+                  <AdminRoutes
+                    isLoggedIn={isAuth}
+                    isAdmin={user?.data?.isAdmin}
+                  >
+                    <AddQuizForm />
+                  </AdminRoutes>
+                }
+              />
+            </Routes>
+          </Container>
+        </Router>
+        {/* <ReactQueryDevtools position='bottom-left' initialIsOpen={true} /> */}
+      {/* </QueryClientProvider> */}
     </div>
   );
 }
