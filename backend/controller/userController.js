@@ -150,7 +150,7 @@ const userController = {
                 }
             }
             console.log(userInDb.id)
-            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600000 }, (error, token) => {
+            return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600000 }, (error, token) => {
                 if (error) throw error
                 res.status(200).json({ token })
             })

@@ -9,7 +9,6 @@ const initialState = {
 
 export default function (state=initialState, action){
     const {type, payload} = action
-    state=initialState
     switch(type){
         case QUIZES_FETCHED:
             return {

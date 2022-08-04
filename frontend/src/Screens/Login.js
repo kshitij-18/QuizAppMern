@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { login } from "../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ShowAlert from "../Components/ShowAlert";
 import { Box } from "@mui/system";
@@ -13,12 +13,22 @@ import './Login.css'
 
 const Login = () => {
   const navigate = useNavigate();
+  const [search, setSearch] = useSearchParams()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState('/')
   const [error, setError] = useState({userNameError:false, passwordError:false})
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  
+
+  if (search.has('redirect')){
+    const url = search.get('redirect');
+    search.delete('redirect');
+    setRedirectUrl(url);
+  }
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if(username === ""){
       setError({...error, userNameError:true})
@@ -28,8 +38,8 @@ const Login = () => {
       return
     } 
     else {
-      dispatch(login({ username, password }));
-      navigate("/", {
+      await dispatch(login({ username, password }));
+      navigate(redirectUrl, {
         replace:true,
         state:{
           message:"Logged In",
@@ -44,10 +54,15 @@ const Login = () => {
   const { isAuth } = authState;
 
   if (isAuth) {
-    navigate("/",{replace:true, state:{
-      message:"You are already logged in",
-      severity:"info"
-    }})
+    return (
+      <Navigate
+        to={redirectUrl}
+        state={{
+          message: "You are already logged in",
+          severity: "info",
+        }}
+      />
+    );
   }
 
   return (

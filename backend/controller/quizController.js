@@ -66,6 +66,17 @@ const quizController = {
             })
         }
 
+    },
+
+    getDistinctCourses: async (req, res) => {
+        try {
+            const result = await Quiz.distinct('course');
+            return res.status(200).json({result});
+        } catch (error) {
+            return res.status(500).json({
+                msg:error.message
+            })
+        }
     }
 }
 
