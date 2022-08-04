@@ -14,4 +14,8 @@ router.post("/", quizController.createQuiz)
 // Adds all the new questions to the quiz course
 router.put("/:id", quizController.addQuestion)
 
+// GET /api/quiz/categories
+// Gets all the distinct categories of the quizzes
+router.get("/categories", quizController.getDistinctCourses);
+
 module.exports = router

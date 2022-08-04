@@ -2,27 +2,52 @@ import { Typography, Box, Paper, CardContent, Card, CardActions, Button, Stack }
 import React, {useEffect, useState} from 'react'
 import {fetchAllQuizes} from '../actions/quizzes'
 import {useDispatch, useSelector} from 'react-redux'
-import {useLocation} from 'react-router-dom'
-import {Snackbar, Alert, CircularProgress, Skeleton, Grid, Autocomplete, TextField} from '@mui/material'
+import {useLocation, useSearchParams} from 'react-router-dom'
+import {Snackbar, Alert, CircularProgress, Skeleton, Grid, Autocomplete, TextField, MenuItem} from '@mui/material'
 import { setErrors } from '../actions/errors'
+import axios from 'axios'
 
 
 function Homepage() {
   const dispatch = useDispatch()
   const {quizzes = {}, loading, error, errorMsg} = useSelector(state => state.quizzes)
+  const [quizCourseOptions, setQuizCourseOptions] = useState([]);
+  const [quizCourseFilter, setQuizCourseFilter] = useState("");
   const {errors} = useSelector(state => state.error)
   const [cardContentLoading, setCardContentLoading] = useState(false)
   let location = useLocation();
-  console.log(location.key)
+  const [searchParams, setSearchParams] = useSearchParams();
   if (location.state !== null){
     let message = location.state.message;
     let severity = location.state.severity;
     location.state = null;
     dispatch(setErrors(message, severity));
   }
+
+  useEffect(() => { 
+    const fetchCategories = async () => {
+      try {
+        const {data: {result}} = await axios.get('/api/quiz/categories');
+        console.log(result);
+        setQuizCourseOptions([...result]);
+      } catch (error) {
+        dispatch(setErrors(error.message, 'error'))
+      }
+    }
+    fetchCategories();
+  }, [])
+
   useEffect(() => {
+    console.log(':::::::Fetching all quizzes::::::::')
     dispatch(fetchAllQuizes())
-  },[dispatch])
+  }, [dispatch])
+
+  const handleChangeInCourse = (e) => {
+    setSearchParams({
+      ...searchParams,
+      course: e.target.value
+    })
+  }
 
   return (
     <div style={{ height: "100vh" }}>
@@ -79,7 +104,20 @@ function Homepage() {
                     />
                   </Grid>
 
-                  <Grid item xs={4}></Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      label="Quiz Course"
+                      fullWidth
+                      select
+                      onChange={handleChangeInCourse}
+                    >
+                      {
+                        quizCourseOptions.map((course, idx) => (
+                          <MenuItem key={idx} value={course}>{course}</MenuItem>
+                        ))
+                      }
+                    </TextField>
+                  </Grid>
                 </Grid>
               </>
               {quizzes?.data?.map(({ name, _id }) => (

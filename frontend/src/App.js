@@ -21,12 +21,15 @@ function App(props) {
   const dispatch = useDispatch()
   const authState = useSelector(state => state.auth)
   const alertState = useSelector(state => state.error);
-  const {isAuth, user} = authState;
-
+ 
   // console.log("This is the authState at App.js", authState)
   if(localStorage.getItem('token') && !authState.user){
-    dispatch(loadUser())
+    (async () => await dispatch(loadUser()))();
   }
+
+   const { isAuth, user } = authState;
+   console.log(':::::::::::::USER::::::::::', user);
+
 
   // console.log("The state at location: "+location.state)
 
@@ -48,7 +51,7 @@ function App(props) {
                 element={
                   <AdminRoutes
                     isLoggedIn={isAuth}
-                    isAdmin={user?.data?.isAdmin}
+                    user={user}
                   >
                     <AddQuizForm />
                   </AdminRoutes>

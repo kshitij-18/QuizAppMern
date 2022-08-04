@@ -52,12 +52,12 @@ return newQuestion;
 
 
 
-const AddQuizForm = ({isAuth, user}) => {
+const AddQuizForm = () => {
   console.log('::::::::::::::RENDERED::::::::::::::::')
   const navigate = useNavigate();
   const dispatch = useDispatch()
-  // const {user, isAuth} = useSelector(state => state.auth);
-  console.log(`User is: ${user} isAuth is: ${isAuth}`);
+  const {user, isAuth} = useSelector(state => state.auth);
+  
   const {errors} = useSelector(state => state.error)
   const {quiz , loading, error, errorMsg} = useSelector(state => state.quiz);
   
@@ -78,6 +78,19 @@ const AddQuizForm = ({isAuth, user}) => {
       state:false
     }
   })
+
+  // console.log(user.data.isAdmin);
+  if (!user?.data.isAdmin) {
+    return (
+      <Navigate
+        to="/"
+        state={{
+          message: "Not allowed back there please check your access rights",
+          severity: "error",
+        }}
+      />
+    );
+  }
   
   if (quiz.data && !loading) {
     navigate("/", {
