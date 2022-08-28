@@ -4,8 +4,26 @@ const Quiz = require('../database/quizModel')
 const quizController = {
     getQuiz: async (req, res) => {
         try {
-            const data = await Quiz.find().populate("questions")
+            const { course=null } = req.query;
+
+            const data = course ? await Quiz.find({course}).populate("questions") : 
+                await Quiz.find().populate("questions");
             res.status(200).json({
+                data
+            })
+        } catch (error) {
+            res.status(500).json({
+                msg: error.message
+            })
+        }
+    },
+
+    getQuizById: async (req, res) => {
+        try {
+            const {id} = req.params;
+
+            const data = await Quiz.findById(id);
+            return res.status(200).json({
                 data
             })
         } catch (error) {

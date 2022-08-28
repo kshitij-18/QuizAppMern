@@ -15,6 +15,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AddQuizForm from './Screens/AddQuizForm'
 import AdminRoutes from './utils/ProtectedRoutes'
 import {BrowserRouter as Router,Routes, Route, useLocation} from 'react-router-dom'
+import LoggedInRoutes from './utils/LoggedInRoutes';
+import QuizRules from './Screens/QuizRules';
 
 
 function App(props) {
@@ -28,7 +30,6 @@ function App(props) {
   }
 
    const { isAuth, user } = authState;
-   console.log(':::::::::::::USER::::::::::', user);
 
 
   // console.log("The state at location: "+location.state)
@@ -36,31 +37,49 @@ function App(props) {
   return (
     <div className="App">
       {/* <QueryClientProvider client={client}> */}
-        <Router>
-          <Navbar />
-          <Container>
-            <Routes>
-              <Route path="/" element={<Homepage />} />
+      <Router>
+        <Navbar />
+        <Container>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <LoggedInRoutes isLoggedIn={isAuth} user={user} url={"/"}>
+                  <Homepage />
+                </LoggedInRoutes>
+              }
+            />
 
-              {/* Login Route */}
-              <Route path="/login" element={<Login />}></Route>
-              {/* SignUp Route */}
-              <Route path="/signup" element={<Signup />} />
-              <Route
-                path="/admin/addQuiz"
-                element={
-                  <AdminRoutes
-                    isLoggedIn={isAuth}
-                    user={user}
-                  >
-                    <AddQuizForm />
-                  </AdminRoutes>
-                }
-              />
-            </Routes>
-          </Container>
-        </Router>
-        {/* <ReactQueryDevtools position='bottom-left' initialIsOpen={true} /> */}
+            {/* Quiz Rules page */}
+            <Route
+              path="/quiz/:quizId"
+              element={
+                <LoggedInRoutes
+                  url={"/"}
+                  user={user}
+                  isLoggedIn={isAuth}
+                >
+                  <QuizRules />
+                </LoggedInRoutes>
+              }
+            ></Route>
+
+            {/* Login Route */}
+            <Route path="/login" element={<Login />}></Route>
+            {/* SignUp Route */}
+            <Route path="/signup" element={<Signup />} />
+            <Route
+              path="/admin/addQuiz"
+              element={
+                <AdminRoutes isLoggedIn={isAuth} user={user}>
+                  <AddQuizForm />
+                </AdminRoutes>
+              }
+            />
+          </Routes>
+        </Container>
+      </Router>
+      {/* <ReactQueryDevtools position='bottom-left' initialIsOpen={true} /> */}
       {/* </QueryClientProvider> */}
     </div>
   );

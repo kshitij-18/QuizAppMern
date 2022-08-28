@@ -1,8 +1,8 @@
-import { Typography, Box, Paper, CardContent, Card, CardActions, Button, Stack } from '@mui/material'
+import { Typography, Box, Paper, CardContent, Card, CardActions, Button, Stack, Chip } from '@mui/material'
 import React, {useEffect, useState} from 'react'
 import {fetchAllQuizes} from '../actions/quizzes'
 import {useDispatch, useSelector} from 'react-redux'
-import {useLocation, useSearchParams} from 'react-router-dom'
+import {useLocation, useSearchParams, useNavigate} from 'react-router-dom'
 import {Snackbar, Alert, CircularProgress, Skeleton, Grid, Autocomplete, TextField, MenuItem} from '@mui/material'
 import { setErrors } from '../actions/errors'
 import axios from 'axios'
@@ -16,19 +16,18 @@ function Homepage() {
   const {errors} = useSelector(state => state.error)
   const [cardContentLoading, setCardContentLoading] = useState(false)
   let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams({});
   if (location.state !== null){
     let message = location.state.message;
     let severity = location.state.severity;
     location.state = null;
     dispatch(setErrors(message, severity));
   }
-
+  const navigate = useNavigate();
   useEffect(() => { 
     const fetchCategories = async () => {
       try {
         const {data: {result}} = await axios.get('/api/quiz/categories');
-        console.log(result);
         setQuizCourseOptions([...result]);
       } catch (error) {
         dispatch(setErrors(error.message, 'error'))
@@ -37,16 +36,27 @@ function Homepage() {
     fetchCategories();
   }, [])
 
+  const course = searchParams.get("course");
+
   useEffect(() => {
     console.log(':::::::Fetching all quizzes::::::::')
-    dispatch(fetchAllQuizes())
-  }, [dispatch])
+    dispatch(fetchAllQuizes(course));
+  }, [dispatch, searchParams.toString()])
 
   const handleChangeInCourse = (e) => {
     setSearchParams({
       ...searchParams,
       course: e.target.value
     })
+  }
+
+  const handleClearFilters = () => {
+    const filters = {}
+    setSearchParams(filters);
+  }
+
+  const handleMovingToQuizPage = (id) => {
+    navigate(`/quiz/${id}`);
   }
 
   return (
@@ -88,7 +98,7 @@ function Homepage() {
             >
               <>
                 <Grid container mt={2} mb={4} spacing={2}>
-                  <Grid item xs={8}>
+                  <Grid item xs={6}>
                     <Autocomplete
                       id="free-solo-demo"
                       freeSolo
@@ -104,23 +114,31 @@ function Homepage() {
                     />
                   </Grid>
 
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <TextField
                       label="Quiz Course"
                       fullWidth
                       select
                       onChange={handleChangeInCourse}
                     >
-                      {
-                        quizCourseOptions.map((course, idx) => (
-                          <MenuItem key={idx} value={course}>{course}</MenuItem>
-                        ))
-                      }
+                      {quizCourseOptions.map((course, idx) => (
+                        <MenuItem key={idx} value={course}>
+                          {course}
+                        </MenuItem>
+                      ))}
                     </TextField>
+                  </Grid>
+
+                  <Grid item xs={3}>
+                    <Chip
+                      variant="outlined"
+                      onClick={handleClearFilters}
+                      label="Clear filters"
+                    />
                   </Grid>
                 </Grid>
               </>
-              {quizzes?.data?.map(({ name, _id }) => (
+              {quizzes?.data?.map(({ name, course, _id }) => (
                 <Card
                   sx={{
                     minWidth: 250,
@@ -141,9 +159,16 @@ function Homepage() {
                         />
                       </React.Fragment>
                     ) : (
-                      <Typography sx={{ fontSize: 30 }} color="text.primary">
-                        {name}
-                      </Typography>
+                      <>
+                        <Typography sx={{ fontSize: 30 }} color="text.primary">
+                          {name}
+                        </Typography>
+                        <Typography
+                          sx={{ fontSize: 10 }}
+                        >
+                          {course}
+                        </Typography>
+                      </>
                     )}
                   </CardContent>
                   <CardActions>
@@ -155,7 +180,7 @@ function Homepage() {
                         height={40}
                       />
                     ) : (
-                      <Button size="medium">Start Quiz</Button>
+                      <Button onClick={() => handleMovingToQuizPage(_id) } size="medium">Start Quiz</Button>
                     )}
                   </CardActions>
                 </Card>

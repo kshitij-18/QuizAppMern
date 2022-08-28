@@ -18,4 +18,8 @@ router.put("/:id", quizController.addQuestion)
 // Gets all the distinct categories of the quizzes
 router.get("/categories", quizController.getDistinctCourses);
 
+// GET /api/quiz/:id
+// Gets the quiz matching the particular id
+router.get("/:id", quizController.getQuizById)
+
 module.exports = router

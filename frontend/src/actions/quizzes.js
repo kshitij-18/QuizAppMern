@@ -1,9 +1,13 @@
 import axios from 'axios'
 import { QUIZES_FETCHED, QUIZES_FETCH_ERROR } from './constants'
 
-export const fetchAllQuizes = () => async dispatch => {
+export const fetchAllQuizes = (course) => async dispatch => {
     try {
-        const {data} = await axios.get("/api/quiz")
+        const {data} = await axios.get("/api/quiz", {
+            params:{
+                course
+            }
+        })
         dispatch({
             type:QUIZES_FETCHED,
             payload:data
