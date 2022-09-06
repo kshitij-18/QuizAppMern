@@ -4,11 +4,29 @@ const Quiz = require('../database/quizModel')
 const quizController = {
     getQuiz: async (req, res) => {
         try {
-            const { course=null } = req.query;
-
-            const data = course ? await Quiz.find({course}).populate("questions") : 
-                await Quiz.find().populate("questions");
+            const { course = null, search = null, limit = 10, skip = 0 } = req.query;
+            const data = await Quiz.find({
+                ...(course ? {course} : {}),
+                ...(search ? {'name': {
+                    $regex: new RegExp(search),
+                    $options: 'i'
+                }} : {})
+            }, {},{skip: Number(skip), limit: Number(limit)}).
+            populate('questions', "-choices.isCorrect -choices._id")
+            
+            const totalCount = await Quiz.countDocuments({
+              ...(course ? { course } : {}),
+              ...(search
+                ? {
+                    name: {
+                      $regex: new RegExp(search),
+                      $options: "i",
+                    },
+                  }
+                : {}),
+            }).exec();
             res.status(200).json({
+                totalCount,
                 data
             })
         } catch (error) {

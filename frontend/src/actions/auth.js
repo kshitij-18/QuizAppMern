@@ -1,8 +1,7 @@
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
 import setAuthToken from '../utils/setAuthToken'
 import { AUTH_ERROR, LOGIN_SUCCESS, LOGOUT_USER, REGISTER_SUCCESS, USER_LOADED, LOGIN_FAIL } from './constants'
-import {setErrors, removeErrors} from './errors'
+import {setErrors} from './errors'
 
 
 export const loadUser = () => async dispatch => {

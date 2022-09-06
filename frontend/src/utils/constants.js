@@ -9,8 +9,25 @@ const DONT_RULES = [
     "Do not copy from internet or some other sources of information",
     "Don't take guidance from your parents or seniors."
 ]
+
+const ITEMS_PER_PAGE_OPTIONS = [
+  {
+    label: "1",
+    value: 1,
+  },
+  {
+    label: "2",
+    value: 2,
+  },
+  {
+    label: "3",
+    value: 3,
+  },
+];
+
 export {
     AVAILABLE_QUIZ_COURSES,
     DO_RULES,
-    DONT_RULES
+    DONT_RULES,
+    ITEMS_PER_PAGE_OPTIONS
 }
