@@ -8,7 +8,6 @@ import QuizStart from '../Components/QuizStart';
 const QuizRules = () => {
   const {quizId} = useParams();
   const [quiz, setQuiz] = useState({}); 
-  console.log('::::::QUIZ', quiz);
   const navigate = useNavigate()
   useEffect(() => {
     const fetchQuizById = async () => {
@@ -26,7 +25,7 @@ const QuizRules = () => {
         }
     }
     fetchQuizById()
-  }, [])
+  }, [quizId, navigate])
 
   return (
     <div>
