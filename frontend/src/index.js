@@ -1,42 +1,45 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux'
-import store from './store';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import { lightBlue, lightGreen, red } from "@mui/material/colors";
-import { Router } from 'react-router-dom';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
-import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import store from "./store";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import { blue, lightBlue, lightGreen, red } from "@mui/material/colors";
+import { Router } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-const client = new QueryClient();
+const queryClient = new QueryClient();
 
 const theme = createTheme({
-  palette:{
-    mode:"dark",
-    success:{
-      main:lightGreen.A400
+  palette: {
+    mode: "dark",
+    success: {
+      main: lightGreen.A400,
     },
-    danger:{
-      main:red[900]
-    }
-  }
-})
+    danger: {
+      main: red[900],
+    },
+    info: {
+      main: blue[900],
+    },
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <Provider store={store}>
-          <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <CssBaseline />
+        <QueryClientProvider client={queryClient}>
           <App />
-        </Provider>
-      </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} position='bottom-left' />
-    </QueryClientProvider>
+          <ReactQueryDevtools initialIsOpen={true} position="bottom-left" />
+        </QueryClientProvider>
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -1,5 +1,6 @@
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const CardheadingStyle = { 
     textAlign: 'center', 
@@ -12,7 +13,9 @@ const InstructionStyle = {
     fontSize:18
 }
 
-const QuizStart = ({noOfQuestions}) => {
+
+const QuizStart = ({noOfQuestions, quizId}) => {
+  const navigate = useNavigate();
   return (
     <div>
       <Card style={{ marginTop: 10, borderRadius: 5, paddingBottom: 10 }}>
@@ -29,7 +32,9 @@ const QuizStart = ({noOfQuestions}) => {
           </Typography>
         </CardContent>
         <CardActions sx={{justifyContent: 'center'}}>
-            <Button variant='contained'>
+            <Button variant='contained' onClick={() => navigate(`/quiz/start/${quizId}`, {
+              replace: true
+            })}>
                 Start Quiz
             </Button>
         </CardActions>

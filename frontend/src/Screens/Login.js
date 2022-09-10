@@ -39,6 +39,7 @@ const Login = () => {
     } 
     else {
       await dispatch(login({ username, password }));
+      console.log(':::::REDIRECT_URL', redirectUrl)
       navigate(redirectUrl, {
         replace:true,
         state:{
