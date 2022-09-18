@@ -40,7 +40,7 @@ const quizController = {
         try {
             const {id} = req.params;
 
-            const data = await Quiz.findById(id);
+            const data = await Quiz.findById(id).populate("questions", "-choices.isCorrect -choices._id");
             return res.status(200).json({
                 data
             })

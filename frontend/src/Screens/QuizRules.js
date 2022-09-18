@@ -38,7 +38,7 @@ const QuizRules = () => {
           <DoDontComponent />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <QuizStart noOfQuestions={!!quiz && quiz.questions?.length} />
+          <QuizStart noOfQuestions={!!quiz && quiz.questions?.length} quizId={quizId} />
         </Grid>
       </Grid>
     </div>
