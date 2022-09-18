@@ -18,8 +18,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [redirectUrl, setRedirectUrl] = useState('/')
   const [error, setError] = useState({userNameError:false, passwordError:false})
+  const [wasLoggedOut, setWasLoggedOut] = useState(false);
   const dispatch = useDispatch();
-
   
 
   if (search.has('redirect')){
@@ -40,6 +40,7 @@ const Login = () => {
     else {
       await dispatch(login({ username, password }));
       console.log(':::::REDIRECT_URL', redirectUrl)
+      setWasLoggedOut(true);
       navigate(redirectUrl, {
         replace:true,
         state:{
@@ -50,21 +51,6 @@ const Login = () => {
       return
     }
   };
-
-  const authState = useSelector((state) => state.auth);
-  const { isAuth } = authState;
-
-  if (isAuth) {
-    return (
-      <Navigate
-        to={redirectUrl}
-        state={{
-          message: "You are already logged in",
-          severity: "info",
-        }}
-      />
-    );
-  }
 
   return (
     <div>

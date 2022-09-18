@@ -2,7 +2,6 @@ import { Avatar, Paper } from '@mui/material'
 import React from 'react'
 
 const QuestionListButtons = ({questions}) => {
-    console.log(':::QUESTIONS', questions);
   return (
     <Paper elevation={12} sx={{width: 'max-content', padding: '20px 10px', height:'100vh'}}>
         {
