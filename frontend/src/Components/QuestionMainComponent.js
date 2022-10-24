@@ -17,16 +17,6 @@ const QuestionMainComponent = ({ data }) => {
   const navigate = useNavigate();
   const quizInfo = useContext(QuizContext);
 
-  const submitQuiz = () => {
-    navigate("/", {
-      replace: true,
-      state: {
-        message: "Quiz submitted successfully",
-        severity: "success",
-      },
-    });
-  };
-
   const clearTimer = () => {
     clearInterval(timerId.current);
     timerId.current = 0;

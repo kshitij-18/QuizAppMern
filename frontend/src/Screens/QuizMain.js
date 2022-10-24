@@ -7,6 +7,7 @@ import { Button, Grid, Modal, Typography } from "@mui/material";
 import QuestionListButtons from "../Components/QuestionListButtons";
 import QuizMainComponent from "../Components/QuestionMainComponent";
 import QuizContextComponent from "../contexts/QuizContext";
+import QuizSubmit from "../Components/QuizSubmit";
 
 const QuizMain = () => {
   const params = useParams();
@@ -18,10 +19,7 @@ const QuizMain = () => {
     error,
   } = useQuery(["quiz", quizId], () => fetchQuizById(quizId), {refetchOnReconnect: true});
   if (isLoading) return <h1>Loading.....</h1>;
-  if (isError) return <h1>{error.message}</h1>;
-
-
-
+  if (isError) return <h1>{error.message}</h1>;  
 
   return data ? (
     <QuizContextComponent>
@@ -32,8 +30,8 @@ const QuizMain = () => {
         <Grid item xs={7.5}>
           <QuizMainComponent data={data} />
         </Grid>
-        <Grid item xs={3}>
-          
+        <Grid item xs={3} sx={{position: "relative"}}>
+          <QuizSubmit />
         </Grid>
       </Grid> 
     </QuizContextComponent>
