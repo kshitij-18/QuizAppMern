@@ -18,7 +18,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [redirectUrl, setRedirectUrl] = useState('/')
   const [error, setError] = useState({userNameError:false, passwordError:false})
-  const [wasLoggedOut, setWasLoggedOut] = useState(false);
   const dispatch = useDispatch();
   
 
@@ -40,7 +39,6 @@ const Login = () => {
     else {
       await dispatch(login({ username, password }));
       console.log(':::::REDIRECT_URL', redirectUrl)
-      setWasLoggedOut(true);
       navigate(redirectUrl, {
         replace:true,
         state:{

@@ -91,7 +91,6 @@ const userController = {
   },
 
   attemptQuiz: async (req, res) => {
-    console.log(req.body)
     const { questionsAttempted = [] } = req.body;
     const quizAttempted = await Quiz.findById(req.params.quizid).populate(
       "questions",

@@ -1,11 +1,10 @@
-import { useDispatch } from 'react-redux'
+/* eslint-disable import/no-anonymous-default-export */
 import {
     AUTH_ERROR,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT_USER,
     REGISTER_FAIL,
-    REGISTER_REQUEST,
     REGISTER_SUCCESS,
     USER_LOADED
 } from '../actions/constants'
@@ -36,7 +35,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 ...payload,
-                loading: false,
+                loading: true,
                 isAuth: true, 
             }
         case REGISTER_FAIL:

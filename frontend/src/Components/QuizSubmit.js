@@ -1,12 +1,29 @@
 import { Button, Card, Typography } from "@mui/material";
 import React, { useContext } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { QuizContext } from "../contexts/QuizContext";
 
-const QuizSubmit = () => {
-    const quizInfo = useContext(QuizContext);
-    const { quizId = "" } = useParams();
-    const {questionsAttempted = [], submitQuiz = () => {} } = quizInfo;
+const QuizSubmit = ({data: {questions}}) => {
+  const quizInfo = useContext(QuizContext);
+  
+  const {
+    questionsAttempted = [],
+    submitQuiz = () => {},
+    setModalOpen = () => {},
+    setModalData,
+  } = quizInfo;
+
+  const openModalOnSubmit = () => {
+    setModalData({
+      title: "Are you sure you want to submit the Quiz?",
+      subTitle: {
+        numberOfQuestionsAttempted: questionsAttempted.length,
+        totalQuestions: questions.length
+      }
+    })
+    setModalOpen(true)
+  }
+
   return (
     <div style={{ position: "absolute", top: "20%" }}>
       <Card
@@ -15,14 +32,19 @@ const QuizSubmit = () => {
           width: "fit-content",
           display: "flex",
           justifyContent: "center",
-          flexDirection: "column"
+          flexDirection: "column",
         }}
       >
         <Typography variant="h5">
-            Questions Attempted: <span>{questionsAttempted.length}</span>
+          Questions Attempted: <span>{questionsAttempted.length}</span>
         </Typography>
         <br />
-        <Button variant="contained" color="success" onClick={() => submitQuiz({quizId})}>
+        <Button
+          variant="contained"
+          color="success"
+          // onClick={() => submitQuiz({ quizId })}
+          onClick={openModalOnSubmit}
+        >
           Submit Quiz
         </Button>
       </Card>
