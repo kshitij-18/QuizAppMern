@@ -17,8 +17,9 @@ const QuizContextComponent = ({ children }) => {
   // ]
 
   const [questionsAttempted, setQuestionsAttempted] = useState([]);
+  const [modalData, setModalData] = useState({})
+  const [modalOpen, setModalOpen] = useState(false)
   const submitQuiz = ({ quizId }) => {
-    console.log("Attempted Questions::::::", questionsAttempted);
     quizSubmitMutation.mutate(
       { quizId, questionsAttempted },
       {
@@ -40,6 +41,10 @@ const QuizContextComponent = ({ children }) => {
     questionsAttempted,
     setQuestionsAttempted,
     submitQuiz,
+    modalOpen,
+    setModalOpen,
+    modalData,
+    setModalData,
   };
 
   return (

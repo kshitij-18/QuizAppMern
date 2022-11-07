@@ -22,7 +22,7 @@ router.post("/", upload.single("profilePicture"),userController.createUser)
 
 // PUT /api/users/:quizid
 // Logs the quiz that the user has taken
-router.post("/:quizid", verifyToken, userController.attemptQuiz)
+router.put("/:quizid", verifyToken, userController.attemptQuiz)
 
 // GET /api/users/auth
 // Gets the authenticated user

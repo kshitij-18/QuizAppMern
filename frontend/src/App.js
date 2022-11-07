@@ -5,24 +5,22 @@ import Navbar from "./Components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { loadUser } from "./actions/auth";
 import { Container } from "react-bootstrap";
 import Login from "./Screens/Login";
 import Signup from "./Screens/Signup";
 import Homepage from "./Screens/Homepage";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AddQuizForm from "./Screens/AddQuizForm";
 import AdminRoutes from "./utils/ProtectedRoutes";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoggedInRoutes from "./utils/LoggedInRoutes";
 import QuizRules from "./Screens/QuizRules";
 import QuizMain from "./Screens/QuizMain";
+import QuizMainWithContext from "./Screens/QuizMainWithContext";
 
 function App(props) {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
-  const alertState = useSelector((state) => state.error);
 
   // console.log("This is the authState at App.js", authState)
   if (localStorage.getItem("token") && !authState.user) {
@@ -77,7 +75,7 @@ function App(props) {
             path="/quiz/start/:quizId"
             element={
               <LoggedInRoutes url={"/"} user={user} isLoggedIn={isAuth}>
-                <QuizMain />
+                <QuizMainWithContext />
               </LoggedInRoutes>
             }
           ></Route>
