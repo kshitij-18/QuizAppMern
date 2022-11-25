@@ -411,7 +411,7 @@ const AddQuizForm = () => {
               </div>
             </div>
           ))}
-          <Button onClick={() => handleSubmit()}>Click Me</Button>
+          <Button onClick={() => handleSubmit()}>Add Quiz</Button>
         </CardContent>
       </Card>
     </div>
