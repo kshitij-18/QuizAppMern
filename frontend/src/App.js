@@ -17,6 +17,7 @@ import LoggedInRoutes from "./utils/LoggedInRoutes";
 import QuizRules from "./Screens/QuizRules";
 import QuizMain from "./Screens/QuizMain";
 import QuizMainWithContext from "./Screens/QuizMainWithContext";
+import ProfilePage from "./Screens/ProfilePage";
 
 function App(props) {
   const dispatch = useDispatch();
@@ -60,6 +61,7 @@ function App(props) {
             <Route path="/login" element={<Login />}></Route>
             {/* SignUp Route */}
             <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route
               path="/admin/addQuiz"
               element={

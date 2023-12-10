@@ -1,0 +1,11 @@
+.profile__card__details{
+    display: flex;
+    justify-content: baseline;
+    align-items: baseline;
+}
+
+.card__avatar__header{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center
+}

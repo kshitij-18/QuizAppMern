@@ -8,3 +8,12 @@ import axios from 'axios';
     throw new Error(error.message);
   }
 }
+
+export const fetchCurrentlyLoggedInUser = async () => {
+  try {
+    const { data } = await axios.get(`/api/users/auth`);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
